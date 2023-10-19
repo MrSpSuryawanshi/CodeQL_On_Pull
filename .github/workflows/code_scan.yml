@@ -1,0 +1,38 @@
+name: "Code Scanning"
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+
+jobs:
+  code_scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check Out Code
+        uses: actions/checkout@v2
+
+      - name: Run Code Scanning
+        run: |
+          # Run your code scanning tool here and check for errors.
+          # If errors are detected, you can set a flag or exit with a non-zero status code.
+          # For demonstration purposes, we'll assume that a variable 'code_scanning_errors' is set to 'true' if errors are detected.
+
+          # Example code scanning command that sets 'code_scanning_errors' to 'true' if errors are detected.
+          # Replace this with your actual code scanning command.
+          # code_scanning_errors=$(your_code_scanning_command)
+          
+          # If errors are detected, add a label to the pull request to disable it.
+          if [ "$code_scanning_errors" == "true" ]; then
+            pr_number=$(jq -r .pull_request.number "$GITHUB_EVENT_PATH")
+            echo "Disabling Pull Request $pr_number due to code scanning errors."
+            curl -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -d "{\"labels\":[\"disable-pull-request\"]}" "https://api.github.com/repos/$GITHUB_REPOSITORY/issues/$pr_number/labels"
+          fi
+
+      - name: Report Code Scanning Results
+        if: failure()
+        run: |
+          # If errors were found, you can take actions here.
+          # This might include disabling the pull request if not done earlier.
