@@ -86,8 +86,28 @@ class CustomCredentialsChecker(BaseChecker):
         ):
             self.add_message("hard-coded-credentials", node=node)
 
+class CustomExecChecker(BaseChecker):
+    __implements__ = (IAstroidChecker,)
+
+    name = "custom-exec-checker"
+    msgs = {
+        "W9905": (
+            "Avoid using 'exec' function. It can be a security risk.",
+            "exec-function",
+            "This message is shown when the 'exec' function is used.",
+        ),
+    }
+
+    @check_messages("exec-function")
+    def visit_call(self, node):
+        if node.func.as_string() == "exec":
+            self.add_message("exec-function", node=node)
+
+
+
 def register(linter):
     linter.register_checker(CustomFlaskDebugChecker(linter))
     linter.register_checker(CustomEvalChecker(linter))
     linter.register_checker(CustomWeakHashChecker(linter))
     linter.register_checker(CustomCredentialsChecker(linter))
+    linter.register_checker(CustomExecChecker(linter))
