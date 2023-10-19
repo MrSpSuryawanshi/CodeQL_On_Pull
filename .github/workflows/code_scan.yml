@@ -36,3 +36,5 @@ jobs:
         run: |
           # If errors were found, you can take actions here.
           # This might include disabling the pull request if not done earlier.
+          echo "Code scanning error detected. Disabling pull request."
+          exit 1
