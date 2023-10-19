@@ -60,6 +60,20 @@ jobs:
         # For more details on CodeQL's query packs, refer to: https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#using-queries-in-ql-packs
         queries: security-extended,security-and-quality
 
+    # Set code_scanning_errors to true if error detecetd
+    - name: Check CodeQL Analysis Results for Errors
+      run: |
+        # You should adjust this based on how CodeQL generates its analysis results
+        if [ -s ${{ steps.codeql.outputs.upload_state_archive }} ]; then
+          code_scanning_errors="false"
+        else
+          code_scanning_errors="true"
+        fi
+        echo "Code Scanning Errors Detected: $code_scanning_errors"
+        
+        # Set the code_scanning_errors variable as an environment variable
+        echo "code_scanning_errors=$code_scanning_errors" >> $GITHUB_ENV
+      if: always()
 
     # Autobuild attempts to build any compiled languages (C/C++, C#, Go, Java, or Swift).
     # If this step fails, then you should remove it and run the build manually (see below)
