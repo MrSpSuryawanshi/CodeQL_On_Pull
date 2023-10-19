@@ -31,7 +31,7 @@ class CustomEvalChecker(BaseChecker):
 
     name = "custom-eval-checker"
     msgs = {
-        "W9909": (
+        "W-SC2": (
             "THIS IS MY CUSTOM MSG FOR USE OF EVAL FUNCTION",
             "eval-function",
             "This message is shown when the 'eval' function is used.",
@@ -91,7 +91,7 @@ class CustomExecChecker(BaseChecker):
 
     name = "custom-exec-checker"
     msgs = {
-        "W9905": (
+        "W-SC1": (
             "Avoid using 'exec' function. It can be a security risk.",
             "exec-function",
             "This message is shown when the 'exec' function is used.",
@@ -109,7 +109,7 @@ class CustomOpenChecker(BaseChecker):
 
     name = "custom-open-checker"
     msgs = {
-        "W9906": (
+        "W-RW1": (
             "Avoid using the 'open' function. It can be a security risk.",
             "custom-open-function",
             "This message is shown when the 'open' function is used.",
@@ -120,6 +120,24 @@ class CustomOpenChecker(BaseChecker):
     def visit_call(self, node):
         if node.func.as_string() == "open":
             self.add_message("custom-open-function", node=node)
+
+
+class CustomFinallyChecker(BaseChecker):
+    __implements__ = (IAstroidChecker,)
+
+    name = "custom-finally-checker"
+    msgs = {
+        "F-001": (
+            "Avoid using the 'finally' function. It can be a security risk.",
+            "custom-finally-function",
+            "This message is shown when the 'finally' function is used.",
+        ),
+    }
+
+    @check_messages("custom-finally-function")
+    def visit_call(self, node):
+        if node.func.as_string() == "finally":
+            self.add_message("custom-finally-function", node=node)
 
 
 class CustomDropnaChecker(BaseChecker):
@@ -177,4 +195,5 @@ def register(linter):
     linter.register_checker(CustomExecChecker(linter))
     linter.register_checker(CustomOpenChecker(linter))
     linter.register_checker(CustomDropnaChecker(linter))
+    linter.register_checker(CustomFinallyChecker(linter))
     linter.register_checker(CustomCodeChecker(linter))
