@@ -1,6 +1,6 @@
 [MASTER]
 # Enable custom plugins for additional checks
-load-plugins = mypylintrplugin
+load-plugins = mylintrplugin
 
 
 [REPORTS]
