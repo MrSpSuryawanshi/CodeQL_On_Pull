@@ -1,4 +1,4 @@
-name: pylint errors
+name: custom_lint
 on:
   push:
     branches:
