@@ -1,0 +1,8 @@
+[MASTER]
+# Enable custom plugins for additional checks
+load-plugins = mylintrplugin
+
+
+[REPORTS]
+# Display Reports
+output-format = text
